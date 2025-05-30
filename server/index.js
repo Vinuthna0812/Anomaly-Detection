@@ -207,6 +207,12 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Database Connected."))
   .catch((err) => console.error("❌ Database Connection Failed:", err));
-
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+// const PORT = process.env.PORT || 8000;
+// app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
+const PORT = process.env.PORT || 8080; // Change from 8000 to 8080
+app.listen(PORT, '0.0.0.0', () => {  // Add '0.0.0.0'
+  console.log(`🚀 Server running on ${PORT}`);
+});
