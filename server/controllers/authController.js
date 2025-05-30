@@ -36,7 +36,8 @@ const registerUser = async (req, res) => {
     });
 
     res
-      .cookie("token", token, { httpOnly: true, sameSite: "strict" })
+      .cookie("token", token, { httpOnly: true, secure: true,        // REQUIRED for https and cross-site
+    sameSite: "None",  })
       .status(201)
       .json({
         success: true,
@@ -69,7 +70,8 @@ const loginUser = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" }).json({
+    res.cookie("token", token, { httpOnly: true, secure: true,        // REQUIRED for https and cross-site
+    sameSite: "None",  }).json({
       success: true,
       user: {
         id: user._id,
