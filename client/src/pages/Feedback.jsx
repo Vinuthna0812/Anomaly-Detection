@@ -210,7 +210,7 @@ const Feedback = () => {
     }
 
     try {
-      const response = await fetch('https://anomaly-detection-production-7004.up.railway.app/api/submit-feedback', {
+      const response = await fetch('https://anomaly-detection-qgwh.onrender.com/api/submit-feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ feedbackText: feedback }),

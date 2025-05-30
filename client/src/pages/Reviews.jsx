@@ -92,7 +92,7 @@ const Reviews = () => {
     if (!newReview.name || !newReview.rating || !newReview.comment) return;
 
     try {
-      const response = await fetch('https://anomaly-detection-production-7004.up.railway.app/api/reviews', {
+      const response = await fetch('https://anomaly-detection-qgwh.onrender.com/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newReview),

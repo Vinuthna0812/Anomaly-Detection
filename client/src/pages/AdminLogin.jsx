@@ -24,7 +24,7 @@ export default function AdminLogin() {
 
     try {
       const response = await axios.post(
-        "https://anomaly-detection-production-7004.up.railway.app/api/admin/login",
+        "https://anomaly-detection-qgwh.onrender.com/api/admin/login",
         { email, password },
         { withCredentials: true }
       );

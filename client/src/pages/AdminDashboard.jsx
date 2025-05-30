@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     axios
-      .get("https://anomaly-detection-production-7004.up.railway.app/api/admin/users", { withCredentials: true })
+      .get("https://anomaly-detection-qgwh.onrender.com/api/admin/users", { withCredentials: true })
       .then((res) => setUsers(res.data))
       .catch((err) => console.error("Error fetching users:", err));
   }, []);

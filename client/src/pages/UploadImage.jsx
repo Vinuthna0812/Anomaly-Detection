@@ -10,7 +10,7 @@ const UploadImage = () => {
 useEffect(() => {
   const fetchUserData = async () => {
     try {
-      const res = await axios.get("https://anomaly-detection-production-7004.up.railway.app/api/auth/profile", {
+      const res = await axios.get("https://anomaly-detection-qgwh.onrender.com/api/auth/profile", {
         withCredentials: true,
       });
       setUserId(res.data._id);
@@ -40,7 +40,7 @@ if (!userId) return alert("User not loaded. Try refreshing or logging in again."
     formData.append("image", image);
     formData.append("userId", userId);
     try {
-      const res = await axios.post("https://anomaly-detection-production-7004.up.railway.app/api/auth/upload", formData, {
+      const res = await axios.post("https://anomaly-detection-qgwh.onrender.com/api/auth/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
@@ -63,7 +63,7 @@ if (!userId) return alert("User not loaded. Try refreshing or logging in again."
       <h2>Your Image History</h2>
       <div className="image-gallery">
         {imageUrls.map((url, index) => (
-          <img key={index} src={`https://anomaly-detection-production-7004.up.railway.app${url}`} alt={`upload-${index}`} className="uploaded-image" />
+          <img key={index} src={`https://anomaly-detection-qgwh.onrender.com${url}`} alt={`upload-${index}`} className="uploaded-image" />
         ))}
       </div>
     </div>

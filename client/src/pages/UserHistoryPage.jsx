@@ -46,7 +46,7 @@ export default function UserHistoryPage() {
           images.map((img, idx) => (
   <div key={idx} className="history-card">
     <img
-      src={`https://anomaly-detection-production-7004.up.railway.app${img.imageUrl}`}
+      src={`https://anomaly-detection-qgwh.onrender.com${img.imageUrl}`}
       alt={`Upload ${idx}`}
     />
     <p><strong>Confidence Score:</strong> {img.confidenceScore}</p>

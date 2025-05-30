@@ -101,7 +101,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "https://anomaly-detection-production-7004.up.railway.app/api/auth/login",
+        "https://anomaly-detection-qgwh.onrender.com/api/auth/login",
         { email, password },
         { withCredentials: true }
       );

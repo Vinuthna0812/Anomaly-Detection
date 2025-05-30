@@ -888,7 +888,7 @@ const Dashboard = () => {
     formData.append("category", category);
 
     try {
-      const { data } = await axios.post("httsp://anomaly-detection-production-7004.up.railway.app/api/auth/upload", formData, {
+      const { data } = await axios.post("https://anomaly-detection-qgwh.onrender.com/api/auth/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
@@ -915,7 +915,7 @@ setAnomalyResult({
         }
         const imageUrl = data.imageUrl.startsWith("http")
           ? data.imageUrl
-          : `https://anomaly-detection-production-7004.up.railway.app${data.imageUrl}?t=${Date.now()}`;
+          : `https://anomaly-detection-qgwh.onrender.com${data.imageUrl}?t=${Date.now()}`;
         setPreviewUrl(imageUrl);
 
         setUser((prevUser) => ({
