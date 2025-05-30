@@ -210,6 +210,7 @@ mongoose
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
+//f
 // const PORT = process.env.PORT || 8000;
 // app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
 const PORT = process.env.PORT || 8000; // Change from 8000 to 8080
