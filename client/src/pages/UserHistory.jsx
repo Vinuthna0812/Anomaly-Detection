@@ -22,7 +22,7 @@ const UserHistory = () => {
         ))} */}
         {user.images.map((img, index) => (
   <div key={index} className="user-history-card">
-    <img src={`https://anomaly-detection-production-7004.up.railway.app${img.imageUrl}`} alt={`Uploaded ${index}`} />
+    <img src={`https://anomaly-detection-qgwh.onrender.com${img.imageUrl}`} alt={`Uploaded ${index}`} />
     <p><strong>Category:</strong> {img.category}</p>
     <p><strong>Predicted Class:</strong> {img.predictedClass}</p>
     <p><strong>Confidence Score:</strong> {img.confidenceScore}</p>
