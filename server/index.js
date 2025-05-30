@@ -212,7 +212,7 @@ app.get('/health', (req, res) => {
 });
 // const PORT = process.env.PORT || 8000;
 // app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
-const PORT = process.env.PORT || 8080; // Change from 8000 to 8080
+const PORT = process.env.PORT || 8000; // Change from 8000 to 8080
 app.listen(PORT, '0.0.0.0', () => {  // Add '0.0.0.0'
   console.log(`🚀 Server running on ${PORT}`);
 });
