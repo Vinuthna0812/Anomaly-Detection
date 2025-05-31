@@ -207,22 +207,60 @@ const getProfile = async (req, res) => {
 //     res.status(500).json({ error: "Image upload failed" });
 //   }
 // };
+// const uploadImage = async (req, res) => {
+//   const { userId } = req.body;
+//   const imageBuffer = fs.readFileSync(req.file.path);
+
+//   const newImage = {
+//     data: imageBuffer,
+//     contentType: req.file.mimetype,
+//     uploadedAt: new Date()
+//   };
+
+//   const user = await User.findById(userId);
+//   user.images.push({ image: newImage }); // Assuming schema allows it
+//   await user.save();
+
+//   res.json({ message: 'Image uploaded', user });
+// };
 const uploadImage = async (req, res) => {
-  const { userId } = req.body;
-  const imageBuffer = fs.readFileSync(req.file.path);
+  try {
+    const { userId } = req.body;
 
-  const newImage = {
-    data: imageBuffer,
-    contentType: req.file.mimetype,
-    uploadedAt: new Date()
-  };
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
 
-  const user = await User.findById(userId);
-  user.images.push({ image: newImage }); // Assuming schema allows it
-  await user.save();
+    if (!userId) {
+      return res.status(400).json({ error: "User ID not provided" });
+    }
 
-  res.json({ message: 'Image uploaded', user });
+    // Read the image file
+    const imageBuffer = fs.readFileSync(req.file.path);
+
+    const newImage = {
+      image: {
+        data: imageBuffer,
+        contentType: req.file.mimetype,
+      },
+      uploadedAt: new Date(),
+    };
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.images.push(newImage); // Assumes schema matches
+    await user.save();
+
+    res.status(200).json({ message: "Image uploaded", user });
+  } catch (error) {
+    console.error("❌ Upload Error:", error.message || error);
+    res.status(500).json({ error: "Image upload failed" });
+  }
 };
+
 // exports.uploadImage = async (req, res) => {
 //   try {
 //     if (!req.file) {
