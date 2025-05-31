@@ -108,104 +108,120 @@ const getProfile = async (req, res) => {
 };
 
 
+// const uploadImage = async (req, res) => {
+//   try {
+//     const { userId, category } = req.body;
+
+//     if (!req.file) {
+//       return res.status(400).json({ error: "No image file uploaded" });
+//     }
+//     if (!category) {
+//       return res.status(400).json({ error: "Category not provided" });
+//     }
+//     if (!userId) {
+//       return res.status(400).json({ error: "User ID not provided" });
+//     }
+//     // console.log("📦 req.file:", req.file);
+//     const {
+//       fieldname,
+//       originalname,
+//       mimetype,
+//       size,
+//       path: filePath,
+//     } = req.file;
+//     console.log("📦 req.file:", {
+//       fieldname,
+//       originalname,
+//       mimetype,
+//       size,
+//       filePath,
+//     });
+
+//     // Ensure uploads folder exists
+//     const uploadsDir = path.join(__dirname, "../uploads");
+//     if (!fs.existsSync(uploadsDir)) {
+//       fs.mkdirSync(uploadsDir, { recursive: true });
+//     }
+
+//     // Save file buffer to uploads folder with unique filename
+//     // Using timestamp to avoid overwrites
+//     // const uniqueFilename = `${Date.now()}_${req.file.originalname}`;
+//     // const savedFilePath = path.join(uploadsDir, uniqueFilename);
+//     // fs.writeFileSync(savedFilePath, req.file.buffer);
+//     const savedFilePath = req.file.path;
+//     const uniqueFilename = req.file.filename;
+//     console.log("✅ File saved at:", savedFilePath);
+//     // const result = await model.predict(savedFilePath); // or whatever you're doing
+
+//     // Prepare form data to send to Flask API
+//     const formData = new FormData();
+//     formData.append("file", fs.createReadStream(savedFilePath));
+//     formData.append("category", category);
+
+//     // Send image and category to Flask server
+//     const flaskRes = await axios.post(
+//       "http://localhost:5001/predict",
+//       formData,
+//       {
+//         headers: formData.getHeaders(),
+//       }
+//     );
+
+//     const { is_anomalous, error, confidence, predicted_class } = flaskRes.data;
+
+//     // Create new image entry for user document in Mongo
+//     // const newImageEntry = {
+//     //   imageUrl: `/uploads/${uniqueFilename}`, // this is relative URL for frontend
+//     //   anomalyScore: error,
+//     //   isAnomalous: is_anomalous,
+//     //   uploadedAt: new Date(),
+//     // };
+//     const newImageEntry = {
+//       imageUrl: `/uploads/${uniqueFilename}`,
+//       isAnomalous: is_anomalous,
+//       category, // ✅ save category from req.body
+//       predictedClass: predicted_class, // ✅ from Flask response
+//       confidenceScore: confidence, // ✅ from Flask response
+//       uploadedAt: new Date(),
+//     };
+
+//     // Save image info in user's images array
+//     const user = await User.findByIdAndUpdate(
+//       userId,
+//       { $push: { images: newImageEntry } },
+//       { new: true }
+//     ).select("-password");
+
+//     // Return combined info to client
+//     res.status(200).json({
+//       is_anomalous,
+//       error,
+//       confidence,
+//       predicted_class,
+//       imageUrl: newImageEntry.imageUrl,
+//       mongo_save: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("❌ Upload Error:", error.message || error);
+//     res.status(500).json({ error: "Image upload failed" });
+//   }
+// };
 const uploadImage = async (req, res) => {
-  try {
-    const { userId, category } = req.body;
+  const { userId } = req.body;
+  const imageBuffer = fs.readFileSync(req.file.path);
 
-    if (!req.file) {
-      return res.status(400).json({ error: "No image file uploaded" });
-    }
-    if (!category) {
-      return res.status(400).json({ error: "Category not provided" });
-    }
-    if (!userId) {
-      return res.status(400).json({ error: "User ID not provided" });
-    }
-    // console.log("📦 req.file:", req.file);
-    const {
-      fieldname,
-      originalname,
-      mimetype,
-      size,
-      path: filePath,
-    } = req.file;
-    console.log("📦 req.file:", {
-      fieldname,
-      originalname,
-      mimetype,
-      size,
-      filePath,
-    });
+  const newImage = {
+    data: imageBuffer,
+    contentType: req.file.mimetype,
+    uploadedAt: new Date()
+  };
 
-    // Ensure uploads folder exists
-    const uploadsDir = path.join(__dirname, "../uploads");
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
+  const user = await User.findById(userId);
+  user.images.push({ image: newImage }); // Assuming schema allows it
+  await user.save();
 
-    // Save file buffer to uploads folder with unique filename
-    // Using timestamp to avoid overwrites
-    // const uniqueFilename = `${Date.now()}_${req.file.originalname}`;
-    // const savedFilePath = path.join(uploadsDir, uniqueFilename);
-    // fs.writeFileSync(savedFilePath, req.file.buffer);
-    const savedFilePath = req.file.path;
-    const uniqueFilename = req.file.filename;
-    console.log("✅ File saved at:", savedFilePath);
-    // const result = await model.predict(savedFilePath); // or whatever you're doing
-
-    // Prepare form data to send to Flask API
-    const formData = new FormData();
-    formData.append("file", fs.createReadStream(savedFilePath));
-    formData.append("category", category);
-
-    // Send image and category to Flask server
-    const flaskRes = await axios.post(
-      "http://localhost:5001/predict",
-      formData,
-      {
-        headers: formData.getHeaders(),
-      }
-    );
-
-    const { is_anomalous, error, confidence, predicted_class } = flaskRes.data;
-
-    // Create new image entry for user document in Mongo
-    // const newImageEntry = {
-    //   imageUrl: `/uploads/${uniqueFilename}`, // this is relative URL for frontend
-    //   anomalyScore: error,
-    //   isAnomalous: is_anomalous,
-    //   uploadedAt: new Date(),
-    // };
-    const newImageEntry = {
-      imageUrl: `/uploads/${uniqueFilename}`,
-      isAnomalous: is_anomalous,
-      category, // ✅ save category from req.body
-      predictedClass: predicted_class, // ✅ from Flask response
-      confidenceScore: confidence, // ✅ from Flask response
-      uploadedAt: new Date(),
-    };
-
-    // Save image info in user's images array
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $push: { images: newImageEntry } },
-      { new: true }
-    ).select("-password");
-
-    // Return combined info to client
-    res.status(200).json({
-      is_anomalous,
-      error,
-      confidence,
-      predicted_class,
-      imageUrl: newImageEntry.imageUrl,
-      mongo_save: true,
-      user,
-    });
-  } catch (error) {
-    console.error("❌ Upload Error:", error.message || error);
-    res.status(500).json({ error: "Image upload failed" });
-  }
+  res.json({ message: 'Image uploaded', user });
 };
 // exports.uploadImage = async (req, res) => {
 //   try {
